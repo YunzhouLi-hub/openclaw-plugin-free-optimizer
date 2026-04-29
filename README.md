@@ -2,6 +2,10 @@
 
 > 自动发现 9 大平台的免费模型，实时测速，动态切换到最快那个。
 
+<p align="center">
+  <img src="Picture/ScreenShot_2026-04-29_163456_689.png" alt="Free Optimizer Screenshot" width="600">
+</p>
+
 ---
 
 ## 一句话
