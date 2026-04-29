@@ -1,0 +1,163 @@
+{
+  "id": "free-optimizer",
+  "name": "free-optimizer",
+  "version": "0.1.1",
+  "displayName": "Free Model Optimizer",
+  "description": "自动发现免费模型并实时切换最快响应模型",
+  "enabledByDefault": true,
+  "type": "provider",
+  "providerName": "free-opt",
+  "minOpenClawVersion": "1.0.0",
+  "author": "",
+  "license": "MIT",
+  "providers": [
+    "free-opt"
+  ],
+  "permissions": [
+    "network",
+    "cron",
+    "storage"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiKeys": {
+        "type": "object",
+        "description": "Provider API keys (use env vars FREE_OPT_*_KEY for production)",
+        "properties": {
+          "openrouter": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": true },
+              "apiKey": { "type": "string", "description": "OpenRouter API key (or set FREE_OPT_OPENROUTER_KEY env var)" }
+            }
+          },
+          "google": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "Google AI Studio API key (or set FREE_OPT_GOOGLE_KEY env var)" }
+            }
+          },
+          "groq": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "Groq API key (or set FREE_OPT_GROQ_KEY env var)" }
+            }
+          },
+          "cerebras": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "Cerebras API key (or set FREE_OPT_CEREBRAS_KEY env var)" }
+            }
+          },
+          "nvidia": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "NVIDIA NIM API key (or set FREE_OPT_NVIDIA_KEY env var)" }
+            }
+          },
+          "github": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "GitHub Models API key (or set FREE_OPT_GITHUB_KEY env var)" }
+            }
+          },
+          "huggingface": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": false },
+              "apiKey": { "type": "string", "description": "Hugging Face API key (or set FREE_OPT_HUGGINGFACE_KEY env var)" }
+            }
+          }
+        }
+      },
+      "benchmark": {
+        "type": "object",
+        "description": "Benchmark / probe settings",
+        "properties": {
+          "intervalMinutes": { "type": "number", "default": 60, "minimum": 5 },
+          "maxResponseTimeMs": { "type": "number", "default": 15000, "minimum": 3000 },
+          "concurrency": { "type": "number", "default": 3, "minimum": 1, "maximum": 10 },
+          "prompt": { "type": "string", "default": "What is the capital of France? Reply in one word." },
+          "maxTokens": { "type": "number", "default": 10 },
+          "includeModels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Only benchmark models whose providerId/modelId contains any of these strings (case-insensitive). Empty = all models allowed."
+          },
+          "includeProviders": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Only benchmark models from these providers (e.g. \"nvidia\", \"github\"). Empty = all providers."
+          },
+          "excludeProviders": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Exclude models from these providers (e.g. \"cloudflare\")."
+          },
+          "excludeModels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Exclude models whose providerId/modelId contains any of these strings (case-insensitive)."
+          },
+          "minParamB": {
+            "type": "number",
+            "default": 0,
+            "minimum": 0,
+            "description": "Minimum model size in billions of parameters (e.g. 7 = 7B+). 0 = no filter. Parsed from model name."
+          },
+          "minContextTokens": {
+            "type": "number",
+            "default": 0,
+            "minimum": 0,
+            "description": "Minimum context window in tokens (e.g. 65536 = 64k+). 0 = no filter."
+          },
+          "pinnedModel": {
+            "type": "string",
+            "default": "",
+            "description": "Pin to a specific model, e.g. \"nvidia/meta/llama-3.3-70b-instruct\". When set, benchmark is skipped and this model is always used."
+          },
+          "preferredModels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Models to prefer in ranking (format: \"providerId/modelId\"). These rank above others regardless of latency."
+          },
+          "avoidModels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [],
+            "description": "Models to avoid in ranking (format: \"providerId/modelId\"). These rank below equal-quality models."
+          }
+        }
+      },
+      "ranking": {
+        "type": "object",
+        "description": "Model ranking strategy",
+        "properties": {
+          "strategy": { "type": "string", "enum": ["ttft", "contextLength"], "default": "ttft" },
+          "fallbackProvider": { "type": "string", "default": "openrouter" },
+          "fallbackModel": { "type": "string", "default": "openrouter/free" }
+        }
+      },
+      "routing": {
+        "type": "object",
+        "description": "Health check configuration",
+        "properties": {
+          "healthCheckEnabled": { "type": "boolean", "default": true },
+          "healthCheckIntervalMs": { "type": "number", "default": 30000 }
+        }
+      }
+    }
+  }
+}

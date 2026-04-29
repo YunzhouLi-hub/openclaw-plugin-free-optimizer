@@ -1,0 +1,39 @@
+{
+  "$schema": "./config.schema.json",
+  "name": "free-optimizer",
+  "version": "1.0.0",
+  "benchmark": {
+    "intervalMinutes": 60,
+    "maxResponseTimeMs": 15000,
+    "concurrency": 3,
+    "prompt": "What is the capital of France? Reply in one word.",
+    "maxTokens": 10,
+    "retryOnFailure": 2,
+    "retryDelayMs": 3000,
+    "includeModels": [
+      "llama-3.3",
+      "deepseek-r1",
+      "kimi",
+      "gpt-oss",
+      "nvidia"
+    ],
+    "excludeModels": [],
+    "minParamB": 0,
+    "minContextTokens": 0,
+    "pinnedModel": "",
+    "includeProviders": [],
+    "excludeProviders": [],
+    "preferredModels": [],
+    "avoidModels": []
+  },
+  "ranking": {
+    "strategy": "ttft",
+    "tiebreaker": "contextLength",
+    "fallbackProvider": "openrouter",
+    "fallbackModel": "openrouter/free"
+  },
+  "routing": {
+    "healthCheckEnabled": true,
+    "healthCheckIntervalMs": 30000
+  }
+}

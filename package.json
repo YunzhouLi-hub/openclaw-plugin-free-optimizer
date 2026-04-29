@@ -1,0 +1,63 @@
+{
+  "name": "openclaw-plugin-free-optimizer",
+  "version": "0.1.1",
+  "description": "Auto-discover, benchmark, and route to the fastest free LLM across 9 providers for OpenClaw.",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "providers/",
+    "lib/",
+    "types/",
+    "config.json",
+    "openclaw.plugin.json",
+    "README.md",
+    ".env.example"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "plugin": true,
+    "type": "provider",
+    "providerName": "free-opt",
+    "minOpenClawVersion": "1.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run && node tests/openrouter-discovery.test.mjs",
+    "test:benchmark": "node tests/benchmark-test.mjs",
+    "test:e2e": "node tests/e2e-pipeline.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openclaw/openclaw-plugin-free-optimizer"
+  },
+  "bugs": {
+    "url": "https://github.com/openclaw/openclaw-plugin-free-optimizer/issues"
+  },
+  "homepage": "https://github.com/openclaw/openclaw-plugin-free-optimizer",
+  "dependencies": {
+    "openclaw": ">=1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.5"
+  },
+  "keywords": [
+    "openclaw",
+    "plugin",
+    "free-model",
+    "llm",
+    "optimizer",
+    "benchmark",
+    "routing",
+    "openrouter",
+    "nvidia",
+    "cloudflare",
+    "groq",
+    "cerebras"
+  ],
+  "license": "MIT"
+}
